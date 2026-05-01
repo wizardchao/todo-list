@@ -51,40 +51,41 @@ export default {
 <style scoped>
 .container {
   display: flex;
-  font-size: 14px;
+  font-size: 15px;
   align-items: center;
   justify-content: center;
-  color: #1a2a3a;
-  margin-top: 20px;
+  color: #303133;
+  margin-top: 16px;
 }
 .checkbox-warpper {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #5a6a7a;
-  margin-top: 10px;
+  color: #909399;
+  margin-top: 12px;
+  font-size: 13px;
 }
 .checkbox {
   display: contents;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 .checkbox-warpper > span {
-  margin-left: 5px;
-  font-size: 12px;
+  margin-left: 4px;
 }
 .icon-qingkong {
   margin-right: 6px;
 }
 .cancle {
-  color: #9f9c9c;
+  color: #909399;
 }
 .confirm {
   background-color: #4ea30a !important;
-  border: 0;
+  border-color: #4ea30a !important;
 }
 .footer {
   display: flex;
   margin-top: 20px;
   justify-content: center;
+  gap: 12px;
 }
 </style>

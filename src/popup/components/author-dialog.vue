@@ -54,11 +54,17 @@ export default {
 .container {
   display: flex;
   justify-content: center;
+  margin-bottom: 8px;
 }
 .footer {
   display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
 }
-
+.cancal {
+  color: #909399;
+}
 .cancal:hover {
   display: none;
 }

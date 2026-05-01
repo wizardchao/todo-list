@@ -1,76 +1,192 @@
 
-.el-button > span{
+/* ── Global Reset & Base ── */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  color: #303133;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Button icon alignment ── */
+.el-button > span {
   display: flex;
   align-items: center;
 }
-.el-button > span > i{
-  margin-right: 3px;
+.el-button > span > i {
+  margin-right: 4px;
 }
 
-/* Dialog */
-.el-dialog__header{
+/* ── Dialog ── */
+.el-dialog {
+  border-radius: 8px !important;
+}
+.el-dialog__header {
   display: none;
 }
-.el-dialog__body{
-  padding: 10px !important;
+.el-dialog__body {
+  padding: 16px 20px !important;
 }
-.el-dialog{
-  border-radius: 10px !important;
-}
+
+/* ── Checkbox ── */
 .el-checkbox {
   width: 100%;
 }
-.checkbox{
+.checkbox {
   width: auto !important;
   margin-right: 10px !important;
 }
-/* 默认 checkbox 样式 */
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   border-color: #4ea30a !important;
   background-color: #4ea30a !important;
 }
-.el-checkbox__input.is-checked+.el-checkbox__label{
+.el-checkbox__input.is-checked + .el-checkbox__label {
   color: #4ea30a !important;
 }
-.el-checkbox__inner:hover{
+.el-checkbox__inner:hover {
   border-color: #4ea30a !important;
 }
 .el-checkbox__input.is-focus .el-checkbox__inner {
   border-color: #4ea30a !important;
 }
-/* card */
-.el-card__header{
-  padding: 0 15px 0 12px!important
+
+/* ── Card ── */
+.el-card {
+  border-radius: 8px !important;
+  border: 1px solid #e4e7ed !important;
 }
-.el-card__body{
-  transition: max-height 0.2s;
-  padding: 10px 20px !important;
+.el-card__header {
+  padding: 10px 16px !important;
+}
+.el-card__body {
+  padding: 12px 16px !important;
   min-height: 200px !important;
-  max-height: 236px !important;
+  max-height: 260px !important;
   overflow-y: auto !important;
 }
-/* .card .el-card__body{
-  max-height: 400px !important;
-} */
-/* input */
-.box-card .el-input__inner{
+
+/* ── Input ── */
+.box-card .el-input__inner {
   border: 0 !important;
-  /*margin-left: -15px !important;*/
-  color: #606266 !important;
+  color: #303133 !important;
   font-size: 14px !important;
-  font-weight: 500 !important;
 }
-/* titl input */
-.title-input .el-input__inner{
-  border-top: 0 !important;
-  border-left: 0 !important;
-  border-right: 0 !important;
-  background-color: #F2F6FC !important;
-  font-size: 18px !important;
-  padding-bottom: 10px !important;
-  margin-bottom: 15px !important;
-  border-bottom: 1px solid #E4E7ED !important;
-  color: #2a3a4a !important;
-  font-weight: 500 !important;
+
+/* ── Header famous word ── */
+.header-famous-word {
+  width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  padding: 0 0 8px 6px;
+  margin-bottom: 12px;
+  color: #909399;
+  font-weight: 400;
+  border-bottom: 1px solid #e4e7ed;
+  user-select: none;
+  line-height: 1.5;
+}
+
+/* ── Date Picker Calendar Task Indicators ── */
+.el-date-table td.task-pending div span {
+  color: #F56C6C !important;
+  font-weight: 600;
+}
+.el-date-table td.task-completed div span {
+  color: #4ea30a !important;
+  font-weight: 600;
+}
+.el-date-table td.task-mixed div span {
+  color: #E6A23C !important;
+  font-weight: 600;
+}
+.el-date-table td.task-pending:hover {
+  background-color: rgba(245, 108, 108, 0.08) !important;
+}
+.el-date-table td.task-completed:hover {
+  background-color: rgba(78, 163, 10, 0.08) !important;
+}
+.el-date-table td.task-mixed:hover {
+  background-color: rgba(230, 162, 60, 0.08) !important;
+}
+
+/* ── Dark Mode Global Overrides ── */
+.dark-mode .el-dialog {
+  background: #1a1a1a !important;
+}
+.dark-mode .el-dialog__body {
+  color: #e0e0e0;
+}
+.dark-mode .el-select .el-input__inner {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+.dark-mode .el-select-dropdown {
+  background: #1a1a1a !important;
+}
+.dark-mode .el-select-dropdown__item {
+  color: #e0e0e0 !important;
+}
+.dark-mode .el-select-dropdown__item:hover {
+  background: #252525 !important;
+}
+.dark-mode .el-select-dropdown__item.selected {
+  color: #409EFF !important;
+}
+.dark-mode .el-date-editor .el-input__inner {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+.dark-mode .el-picker-panel {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+}
+.dark-mode .el-date-picker__header-label {
+  color: #e0e0e0 !important;
+}
+.dark-mode .el-date-table th {
+  color: #888 !important;
+}
+.dark-mode .el-date-table td.available div span {
+  color: #d0d0d0;
+}
+.dark-mode .el-date-table td.today div span {
+  color: #409EFF !important;
+}
+.dark-mode .el-date-table td.current div span {
+  color: #fff !important;
+}
+.dark-mode .el-date-table td.prev-month div span,
+.dark-mode .el-date-table td.next-month div span {
+  color: #555 !important;
+}
+.dark-mode .el-picker-panel__icon-btn {
+  color: #888 !important;
+}
+.dark-mode .el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #1a1a1a !important;
+}
+.dark-mode .el-empty__description {
+  color: #888 !important;
+}
+.dark-mode .el-button--text {
+  color: #888 !important;
+}
+.dark-mode .el-button--text:hover {
+  color: #409EFF !important;
+}
+.dark-mode .el-button--default {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+.dark-mode .el-button--default:hover {
+  color: #409EFF !important;
+  border-color: #409EFF !important;
+}
+.dark-mode .el-button--warning {
+  background: #4ea30a !important;
+  border-color: #4ea30a !important;
 }

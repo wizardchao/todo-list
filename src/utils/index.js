@@ -58,3 +58,23 @@ export const setBadgeText = (text = "0", color = "#4ea30a") => {
   chrome.action.setBadgeText({ text: text });
   chrome.action.setBadgeBackgroundColor({ color: color });
 };
+
+// Get all date-keyed task summaries for calendar indicators
+export const getAllTaskDateSummary = (callback) => {
+  chrome.storage.sync.get(null, (result) => {
+    const summary = {};
+    Object.keys(result).forEach((key) => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(key)) {
+        const tasks = result[key];
+        if (Array.isArray(tasks) && tasks.length > 0) {
+          const completed = tasks.filter((t) => t.checked).length;
+          const pending = tasks.filter((t) => !t.checked).length;
+          if (completed > 0 || pending > 0) {
+            summary[key] = { completed, pending };
+          }
+        }
+      }
+    });
+    callback(summary);
+  });
+};

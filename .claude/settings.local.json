@@ -4,7 +4,8 @@
       "Bash(rtk ls:*)",
       "Bash(rtk npm:*)",
       "Bash(NODE_OPTIONS=--openssl-legacy-provider rtk npm:*)",
-      "Bash(xxd)"
+      "Bash(xxd)",
+      "Bash(npm run:*)"
     ]
   }
 }

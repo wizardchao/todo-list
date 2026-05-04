@@ -157,15 +157,26 @@
 <!--        <i class="iconfont icon-dashang1"></i>-->
 <!--        打赏-->
 <!--      </el-button>-->
-      <el-button
-        size="mini"
-        @click="handlerClear"
-        :disabled="clearDisabled"
-        class="clear"
-      >
-        <i class="iconfont icon-qingkong1"></i>
-        清空
-      </el-button>
+      <div class="footer-right">
+        <el-button
+          size="mini"
+          @click="handlerExport"
+          :disabled="clearDisabled"
+          class="export"
+        >
+          <i class="el-icon-download"></i>
+          导出
+        </el-button>
+        <el-button
+          size="mini"
+          @click="handlerClear"
+          :disabled="clearDisabled"
+          class="clear"
+        >
+          <i class="iconfont icon-qingkong1"></i>
+          清空
+        </el-button>
+      </div>
     </footer>
     <!-- Dialog -->
     <AuthorDialog ref="AuthorDialog" :isShowFooter="isShowFooter">
@@ -564,6 +575,31 @@ export default {
         item.isEdit = true;
       }
     },
+    // Export Tasks
+    handlerExport() {
+      const date = this.nowTime;
+      const pending = this.tasks.filter((t) => !t.checked);
+      const completed = this.tasks.filter((t) => t.checked);
+      const lines = [`# ${date}`, ""];
+      if (pending.length) {
+        lines.push("## 未完成", "");
+        pending.forEach((t, i) => { lines.push(`${i + 1}. ${t.label}`); });
+        lines.push("");
+      }
+      if (completed.length) {
+        lines.push("## 已完成", "");
+        completed.forEach((t, i) => { lines.push(`${i + 1}. ${t.label}`); });
+        lines.push("");
+      }
+      const content = lines.join("\n");
+      const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${date}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
     // Checkbox Change
     handlerCheckboxChange(item) {
       if (item.checked) {
@@ -740,7 +776,7 @@ export default {
 }
 
 .view-mode-select {
-  width: 88px;
+  width: 68px;
   flex-shrink: 0;
 }
 
@@ -883,6 +919,11 @@ footer .el-button:hover {
 footer .el-button i {
   font-size: 14px !important;
 }
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
 .clear:hover .icon-qingkong1 {
   display: inline-block;
@@ -932,6 +973,9 @@ footer .el-button i {
 }
 .dark-mode .check-all-count {
   color: #888;
+}
+.dark-mode .export:hover {
+  color: #409EFF;
 }
 .dark-mode .week-day-item {
   background: #1a1a1a;

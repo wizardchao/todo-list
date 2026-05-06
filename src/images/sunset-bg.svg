@@ -1,0 +1,31 @@
+<svg width="720" height="520" viewBox="0 0 720 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="sunsetGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(530 138) rotate(109.219) scale(256.534 239.672)">
+      <stop stop-color="#FFB16A" stop-opacity="0.72"/>
+      <stop offset="0.34" stop-color="#FF8E67" stop-opacity="0.42"/>
+      <stop offset="0.66" stop-color="#D96DA0" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#1A1524" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sunsetArc" x1="192" y1="370" x2="528" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E66C73" stop-opacity="0"/>
+      <stop offset="0.3" stop-color="#F08A69" stop-opacity="0.22"/>
+      <stop offset="0.66" stop-color="#FFB36B" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#FFD58B" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cloudNight1" x1="320" y1="124" x2="556" y2="124" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5C4D73" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#7E628E" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#5C4D73" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cloudNight2" x1="428" y1="200" x2="654" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71566F" stop-opacity="0"/>
+      <stop offset="0.46" stop-color="#956F73" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#71566F" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle cx="530" cy="138" r="212" fill="url(#sunsetGlow)"/>
+  <path d="M198 348C277 318 359 279 449 225C470 213 499 210 523 219C550 229 570 248 584 274" stroke="url(#sunsetArc)" stroke-width="56" stroke-linecap="round"/>
+  <path d="M346 124C375 102 427 92 480 104C520 113 544 130 552 146C557 156 553 166 540 172C522 180 493 182 457 180L396 176C363 174 340 164 331 150C326 142 331 133 346 124Z" fill="url(#cloudNight1)"/>
+  <path d="M444 196C467 178 510 167 558 171C603 175 635 193 648 213C656 225 651 235 636 240C617 247 586 248 548 245L479 239C451 237 432 224 428 208C427 203 432 199 444 196Z" fill="url(#cloudNight2)"/>
+  <circle cx="575" cy="106" r="26" fill="#FFC37A" fill-opacity="0.34"/>
+</svg>

@@ -1,9 +1,27 @@
 
 /* ── Global Reset & Base ── */
+html,
+body,
+#app {
+  min-height: 100%;
+}
+html.popup-light,
+body.popup-light,
+#app.popup-light {
+  background:
+    radial-gradient(circle at top center, #ffffff 0%, #f5f7fb 34%, #edf2f8 68%, #e2e8f0 100%);
+}
+html.popup-dark,
+body.popup-dark,
+#app.popup-dark {
+  background:
+    radial-gradient(circle at top center, #242424 0%, #181818 38%, #101010 72%, #090909 100%);
+}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
   font-size: 14px;
   color: #303133;
+  margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 

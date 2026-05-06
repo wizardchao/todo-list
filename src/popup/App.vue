@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="{ 'dark-mode': isDarkMode }">
+  <div class="container" :class="{ 'dark-mode': isDarkMode }" :style="containerStyle">
     <!-- header -->
     <header>
       <div
@@ -11,7 +11,7 @@
     <!-- card -->
     <el-card class="box-card" shadow="never">
       <div slot="header" class="card-header">
-        <div class="card-header-top">
+        <div class="card-header-controls">
           <el-select
             v-model="viewMode"
             size="mini"
@@ -21,33 +21,29 @@
             <el-option label="月" value="month"></el-option>
             <el-option label="周" value="week"></el-option>
           </el-select>
-          <el-button type="text" @click="handlerAddTask">
-            <i class="el-icon-circle-plus-outline card-add-icon"></i>
-            添加待办事项
-          </el-button>
-        </div>
-        <div class="card-header-nav">
-          <el-date-picker
-            v-if="viewMode === 'month'"
-            v-model="curDate"
-            type="date"
-            placeholder="选择日期"
-            @change="changeDate"
-            @focus="handlerDateFocus"
-            :clearable="false"
-            :picker-options="pickerOptions"
-          >
-          </el-date-picker>
-          <div v-else class="week-view">
-            <i
-              class="el-icon-arrow-left week-nav-arrow"
-              @click="handlerPrevWeek"
-            ></i>
-            <span class="week-range-label">{{ weekRangeLabel }}</span>
-            <i
-              class="el-icon-arrow-right week-nav-arrow"
-              @click="handlerNextWeek"
-            ></i>
+          <div class="card-header-nav">
+            <el-date-picker
+              v-if="viewMode === 'month'"
+              v-model="curDate"
+              type="date"
+              placeholder="选择日期"
+              @change="changeDate"
+              @focus="handlerDateFocus"
+              :clearable="false"
+              :picker-options="pickerOptions"
+            >
+            </el-date-picker>
+            <div v-else class="week-view">
+              <i
+                class="el-icon-arrow-left week-nav-arrow"
+                @click="handlerPrevWeek"
+              ></i>
+              <span class="week-range-label">{{ weekRangeLabel }}</span>
+              <i
+                class="el-icon-arrow-right week-nav-arrow"
+                @click="handlerNextWeek"
+              ></i>
+            </div>
           </div>
         </div>
         <div v-if="viewMode === 'week'" class="week-days">
@@ -145,19 +141,11 @@
     </el-card>
     <!-- footer -->
     <footer>
-      <el-button size="mini" @click="handlerSourceCode">
-        <i class="iconfont icon-github"></i>
-        源码
-      </el-button>
-<!--      <el-button size="mini" @click="handlerContactAuthor">-->
-<!--        <i class="iconfont icon-weixin1"></i>-->
-<!--        联系我-->
-<!--      </el-button>-->
-<!--      <el-button size="mini" @click="handlerRewardAuthor" class="reward">-->
-<!--        <i class="iconfont icon-dashang1"></i>-->
-<!--        打赏-->
-<!--      </el-button>-->
-      <div class="footer-right">
+      <div class="footer-group">
+        <el-button size="mini" @click="handlerAddTask">
+          <i class="el-icon-circle-plus-outline"></i>
+          添加
+        </el-button>
         <el-button
           size="mini"
           @click="handlerExport"
@@ -167,6 +155,8 @@
           <i class="el-icon-download"></i>
           导出
         </el-button>
+      </div>
+      <div class="footer-group">
         <el-button
           size="mini"
           @click="handlerClear"
@@ -175,6 +165,10 @@
         >
           <i class="iconfont icon-qingkong1"></i>
           清空
+        </el-button>
+        <el-button size="mini" @click="handlerSourceCode">
+          <i class="iconfont icon-github"></i>
+          源码
         </el-button>
       </div>
     </footer>
@@ -192,6 +186,8 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import AuthorDialog from "./components/author-dialog.vue";
 import ClearDialog from "./components/clear-dialog.vue";
+import sunriseBg from "../images/sunrise-bg.svg";
+import sunsetBg from "../images/sunset-bg.svg";
 import {
   saveTitleLocalstory,
   getTitleLocalstory,
@@ -224,6 +220,7 @@ export default {
   },
   data() {
     return {
+      themeTick: Date.now(),
       curDate: dayjs().format("YYYY-MM-DD"),
       viewMode: "month",
       weekOffset: 0,
@@ -247,7 +244,7 @@ export default {
       return !this.isTitleEdit && this.title !== "";
     },
     isDarkMode() {
-      const hour = dayjs().hour();
+      const hour = dayjs(this.themeTick).hour();
       return hour < 6 || hour >= 18;
     },
     famousWord() {
@@ -318,20 +315,40 @@ export default {
         },
       };
     },
+    containerStyle() {
+      const image = this.isDarkMode ? sunsetBg : sunriseBg;
+      return {
+        "--scene-image": `url(${image})`,
+      };
+    },
   },
   created() {
     this.init();
     this.refreshTaskDateMap();
   },
+  mounted() {
+    this.syncThemeClass();
+    this._themeTimer = setInterval(() => {
+      this.themeTick = Date.now();
+    }, 60000);
+  },
   destroyed() {
     const key = this.nowTime;
     setTasksListLocalstory(key, this.tasks);
+    if (this._themeTimer) {
+      clearInterval(this._themeTimer);
+      this._themeTimer = null;
+    }
+    this.clearThemeClass();
     if (this._calendarObserver) {
       this._calendarObserver.disconnect();
       this._calendarObserver = null;
     }
   },
   watch: {
+    isDarkMode() {
+      this.syncThemeClass();
+    },
     tasks: {
       deep: true,
       immediate: true,
@@ -366,6 +383,24 @@ export default {
       this.curDate = dateStr;
       getTasksListLocalstory(this, dateStr);
       this.refreshTaskDateMap();
+    },
+    syncThemeClass() {
+      if (typeof document === "undefined") return;
+      const targetIds = [document.documentElement, document.body, document.getElementById("app")];
+      const addClass = this.isDarkMode ? "popup-dark" : "popup-light";
+      const removeClass = this.isDarkMode ? "popup-light" : "popup-dark";
+      targetIds.forEach((el) => {
+        if (!el) return;
+        el.classList.remove(removeClass);
+        el.classList.add(addClass);
+      });
+    },
+    clearThemeClass() {
+      if (typeof document === "undefined") return;
+      [document.documentElement, document.body, document.getElementById("app")].forEach((el) => {
+        if (!el) return;
+        el.classList.remove("popup-dark", "popup-light");
+      });
     },
     // ── Calendar task indicators ──
     refreshTaskDateMap() {
@@ -655,10 +690,44 @@ export default {
 }
 
 .container {
+  position: relative;
   width: 350px;
   padding: 0 10px;
   background: #f2f6fc;
   margin: 16px 0 10px 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 220px;
+  background-image: var(--scene-image);
+  background-repeat: no-repeat;
+  background-position: right -6px top -6px;
+  background-size: 118% auto;
+  opacity: 0.68;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(242, 246, 252, 0.1) 0%, rgba(242, 246, 252, 0.16) 12%, rgba(242, 246, 252, 0.32) 26%, rgba(242, 246, 252, 0.72) 44%, rgba(242, 246, 252, 0.94) 60%, rgba(242, 246, 252, 0.98) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container > * {
+  position: relative;
+  z-index: 1;
 }
 
 .header-title {
@@ -764,15 +833,20 @@ export default {
   gap: 8px;
 }
 
-.card-header-top {
+.card-header-controls {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
 .card-header-nav {
   display: flex;
   align-items: center;
+  flex: 1;
+}
+
+.card-header-nav .el-date-editor {
+  width: 100%;
 }
 
 .view-mode-select {
@@ -784,7 +858,7 @@ export default {
 .week-view {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 8px;
   width: 100%;
 }
@@ -894,24 +968,25 @@ export default {
   margin-right: 5px;
 }
 
-.card-add-icon {
-  font-size: 15px;
-  font-weight: 500;
-}
-
 footer {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
+  gap: 8px;
   color: #909399;
   font-size: 13px;
 }
 footer .el-button {
+  width: 100%;
+  margin: 0;
   font-size: 13px;
   color: #909399;
   padding: 6px 8px;
   transition: color 0.2s;
+}
+footer .el-button + .el-button {
+  margin-left: 0;
 }
 footer .el-button:hover {
   color: #409EFF;
@@ -919,10 +994,10 @@ footer .el-button:hover {
 footer .el-button i {
   font-size: 14px !important;
 }
-.footer-right {
+.footer-group {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex: 1;
+  gap: 8px;
 }
 
 .clear:hover .icon-qingkong1 {
@@ -933,15 +1008,39 @@ footer .el-button i {
 
 /* ── Dark Mode ── */
 .dark-mode {
-  background: #121212;
+  background: linear-gradient(180deg, rgba(34, 34, 34, 0.82) 0%, rgba(22, 22, 22, 0.94) 36%, rgba(12, 12, 12, 0.98) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 40px rgba(0, 0, 0, 0.42);
+  border-radius: 10px;
+}
+.dark-mode::before {
+  top: -18px;
+  height: 228px;
+  opacity: 0.62;
+  background-position: right 2px top -16px;
+}
+.dark-mode::after {
+  background:
+    linear-gradient(180deg, rgba(18, 18, 18, 0.08) 0%, rgba(18, 18, 18, 0.16) 12%, rgba(18, 18, 18, 0.3) 24%, rgba(18, 18, 18, 0.58) 40%, rgba(18, 18, 18, 0.84) 56%, rgba(18, 18, 18, 0.96) 100%);
+}
+.header-famous-word {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.1) 52%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 8px;
+  backdrop-filter: blur(2px);
 }
 .dark-mode .header-famous-word {
   color: #a0a0a0;
   border-bottom-color: #2a2a2a;
+  background: linear-gradient(90deg, rgba(26, 26, 26, 0.36) 0%, rgba(26, 26, 26, 0.14) 52%, rgba(26, 26, 26, 0) 100%);
+}
+.box-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(10px);
 }
 .dark-mode .el-card {
-  background: #1a1a1a !important;
+  background: linear-gradient(180deg, rgba(29, 29, 29, 0.9) 0%, rgba(24, 24, 24, 0.94) 100%) !important;
   border-color: #2a2a2a !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
 }
 .dark-mode .el-card__header {
   border-bottom-color: #2a2a2a !important;

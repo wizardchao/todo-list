@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const archiver = require('archiver');
 
 const DEST_DIR = path.join(__dirname, '../dist');
-const DEST_ZIP_DIR = path.join(__dirname, '../dist-zip'); 
 
 const extractExtensionData = () => {
   const extPackageJson = require('../package.json');
@@ -16,17 +16,17 @@ const extractExtensionData = () => {
   }
 };
 
-const makeDestZipDirIfNotExists = () => {
-  if(!fs.existsSync(DEST_ZIP_DIR)) {
-    fs.mkdirSync(DEST_ZIP_DIR);
+const makeDestDirIfNotExists = () => {
+  if(!fs.existsSync(DEST_DIR)) {
+    fs.mkdirSync(DEST_DIR);
   }
 }
 
-const buildZip = (src, dist, zipFilename) => {
-  console.info(`Building ${zipFilename}...`);
+const buildZip = (src, outputFile) => {
+  console.info(`Building ${path.basename(outputFile)}...`);
 
   const archive = archiver('zip', { zlib: { level: 9 }});
-  const stream = fs.createWriteStream(path.join(dist, zipFilename));
+  const stream = fs.createWriteStream(outputFile);
   
   return new Promise((resolve, reject) => {
     archive
@@ -42,11 +42,24 @@ const buildZip = (src, dist, zipFilename) => {
 const main = () => {
   const {name, version} = extractExtensionData();
   const zipFilename = `${name}-v${version}.zip`;
-  
-  makeDestZipDirIfNotExists();
+  const tempZipPath = path.join(os.tmpdir(), zipFilename);
+  const finalZipPath = path.join(DEST_DIR, zipFilename);
 
-  buildZip(DEST_DIR, DEST_ZIP_DIR, zipFilename)
-    .then(() => console.info('OK'))
+  makeDestDirIfNotExists();
+
+  if (fs.existsSync(tempZipPath)) {
+    fs.unlinkSync(tempZipPath);
+  }
+
+  if (fs.existsSync(finalZipPath)) {
+    fs.unlinkSync(finalZipPath);
+  }
+
+  buildZip(DEST_DIR, tempZipPath)
+    .then(() => {
+      fs.renameSync(tempZipPath, finalZipPath);
+      console.info('OK');
+    })
     .catch(console.err); 
 };
 

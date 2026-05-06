@@ -9,7 +9,7 @@ npm run build          # Production build → dist/
 npm run build:dev      # Development build (no minification)
 npm run watch          # Production build with --watch
 npm run watch:dev      # Development build with HMR (auto-reloads extension in Chrome)
-npm run build-zip      # Create dist-zip/todo-list-v{version}.zip for publishing
+npm run build-zip      # Create dist/todo-list-v{version}.zip for publishing
 npm run prettier:write # Format source files
 ```
 
